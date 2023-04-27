@@ -91,6 +91,7 @@ def place_market_order(client, market, side, size, price, reduce_only):
         raise e
  
     print("place_market_order: order placed")
+    # print(placed_order.data)
 
     # Return results
     return placed_order.data

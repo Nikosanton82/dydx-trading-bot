@@ -102,4 +102,105 @@ def manage_trade_exits(client):
         # Trigger close based on Z-Score
         if CLOSE_AT_ZSCORE_CROSS:
 
-            continue
+            # print(series_1[-1], series_2[-1])
+
+            # Initialize z_scores
+            hedge_ratio = position["hedge_ratio"]
+            z_score_traded = position["z_score"]
+            if len(series_1) > 0 and len(series_1) == len(series_2):
+                spread = series_1 - (hedge_ratio * series_2)
+                z_score_current = calculate_zscore(spread).values.tolist()[-1]
+
+            # Determine trigger
+            z_score_level_check = abs(z_score_current) >= abs(z_score_traded)
+            z_score_cross_check = (z_score_current < 0 and z_score_traded > 0) or (z_score_current > 0 and z_score_traded < 0)
+
+            # Close trade
+            if z_score_level_check and z_score_cross_check:
+
+                # Initiate close trigger
+                is_close = True
+
+        ###
+        # Add any other close logic you want here
+        # Trigger is_close
+        ###
+
+        # Close positions if triggered
+        #### IN PRODUCTION REMOVE THE "not" ####. Otherwise it will close all positions regadless if the triggers are satisfied
+        if not is_close:
+
+            # Determine side - m1
+            side_m1 = "SELL"
+            if position_side_m1 == "SELL":
+                side_m1 = "BUY"
+
+            # Determine side - m2
+            side_m2 = "SELL"
+            if position_side_m2 == "SELL":
+                side_m2 = "BUY"
+
+            # Get and format price
+            price_m1 = float(series_1[-1])
+            price_m2 = float(series_2[-1])
+            accept_price_m1 = price_m1 * 1.05 if side_m1 == "BUY" else price_m1 * 0.95
+            accept_price_m2 = price_m2 * 1.05 if side_m2 == "BUY" else price_m2 * 0.95
+            tick_size_m1 = markets["markets"][position_market_m1]["tickSize"]
+            tick_size_m2 = markets["markets"][position_market_m2]["tickSize"]
+            accept_price_m1 = format_number(accept_price_m1, tick_size_m1)
+            accept_price_m2 = format_number(accept_price_m2, tick_size_m2)
+
+            # Close positions
+            try:
+
+                # Close position for market 1
+                print(">>> Closing market 1 <<<")
+                print(f"Closing position for {position_market_m1}")
+
+                close_order_m1 = place_market_order(
+                    client,
+                    market=position_market_m1,
+                    side=side_m1,
+                    size=position_size_m1,
+                    price=accept_price_m1,
+                    reduce_only=True,
+                )
+
+                print(close_order_m1["order"]["id"])
+                print(">>> Closing <<<")
+
+                # Protect API
+                time.sleep(1)
+
+                # Close position for market 2
+                print(">>> Closing market 2 <<<")
+                print(f"Closing position for {position_market_m2}")
+
+                close_order_m2 = place_market_order(
+                    client,
+                    market=position_market_m2,
+                    side=side_m2,
+                    size=position_size_m2,
+                    price=accept_price_m2,
+                    reduce_only=True,
+                )
+
+                print(close_order_m2["order"]["id"])
+                print(">>> Closing <<<")
+
+                # Protect API
+                time.sleep(1)
+            except Exception as e:
+                print(f"Exit failed for {position_market_m1} with {position_market_m2}")
+                save_output.append(position)
+
+        # Keep record of items and save
+        else:
+            save_output.append(position)
+
+
+    # Save remaining items
+    print(f"{len(save_output)} Items remaining. Saving file...")
+    with open("bot_agents.json", "w") as f:
+        json.dump(save_output, f)
+
