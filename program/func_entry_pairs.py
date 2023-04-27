@@ -35,7 +35,7 @@ def open_positions(client):
         open_positions_dict = json.load(open_positions_file)
         for p in open_positions_dict:
             bot_agent.append(p)
-            
+
         # pprint(bot_agent)
 
     except:
@@ -162,7 +162,7 @@ def open_positions(client):
                             print("---")
 
     # Save agents
-    print(f"Success: {len(bot_agents)} New Pairs LIVE")
+    print(f"Success: Manage open trades checked")
     if len(bot_agents) > 0:
         with open("bot_agents.json", "w") as f:
             json.dump(bot_agents, f)
