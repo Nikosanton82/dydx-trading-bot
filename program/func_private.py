@@ -6,6 +6,7 @@ import time
 from pprint import pprint
 from func_utils import format_number
 from datetime import datetime, timedelta
+import json
 
 # Replace 'YOUR_TIME_ZONE' with your actual time zone. For example, 'America/New_York' or 'Europe/London'
 # os.environ['TZ'] = 'Europe/Vienna'
@@ -160,6 +161,11 @@ def abort_all_positions(client):
 
             # Protect API
             time.sleep(0.2)
+
+        # Override json file with empty list
+        bot_agents = []
+        with open("bot_agents.json", "w") as f:
+            json.dump(bot_agents, f)
 
         # Return closed orders
         return close_orders

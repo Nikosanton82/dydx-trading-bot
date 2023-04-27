@@ -165,7 +165,6 @@ def open_positions(client):
 
     # Save agents
     print(f"Success: Manage open trades checked")
-    send_message(f"Success: Manage open trades checked")
     if len(bot_agents) > 0:
         with open("bot_agents.json", "w") as f:
             json.dump(bot_agents, f)
