@@ -3,6 +3,7 @@ import numpy as np
 import statsmodels.api as sm
 from statsmodels.tsa.stattools import coint
 from constants import MAX_HALF_LIFE, WINDOW
+from func_messaging import send_message
 
 
 # Calculate Half Life

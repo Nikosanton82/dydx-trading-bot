@@ -1,3 +1,4 @@
+from func_messaging import send_message
 from decouple import config
 from dydx3 import Client
 from web3 import Web3
@@ -32,8 +33,10 @@ def connect_dydx():
     account_id = account.data["account"]["id"]
     quote_balance = account.data["account"]["quoteBalance"]
     print("Connection successful!")
+    send_message("Connection successful!")
     print("Account Id: ", account_id)
     print("Quote Balance: ", quote_balance)
+    send_message(f"Quote Balance: {quote_balance}")
 
     # Return Client
     return client

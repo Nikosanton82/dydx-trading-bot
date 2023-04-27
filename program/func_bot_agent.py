@@ -1,4 +1,5 @@
 from func_private import place_market_order, check_order_status
+from func_messaging import send_message
 from datetime import datetime, timedelta
 import time
 from pprint import pprint
@@ -77,6 +78,7 @@ class BotAgent:
         # Guard: If order cancelled move onto to next Pair
         if order_status == "CANCELLED":
             print(f"{self.market_1} vs {self.market_2} - Order cancelled...")
+            send_message(f"{self.market_1} vs {self.market_2} - Order cancelled...")
             self.order_dict["pair_status"] = "FAILED"
             return "failed"
         
@@ -88,6 +90,7 @@ class BotAgent:
             # Guard: If order cancelled move onto to next Pair
             if order_status == "CANCELLED":
                 print(f"{self.market_1} vs {self.market_2} - Order cancelled...")
+                send_message(f"{self.market_1} vs {self.market_2} - Order cancelled...")
                 self.order_dict["pair_status"] = "FAILED"
                 return "failed" 
             
@@ -96,6 +99,7 @@ class BotAgent:
                 self.client.private.cancel_order(order_id=order_id)
                 self.order_dict["pair_status"] = "ERROR"
                 print(f"{self.market_1} vs {self.market_2} - Order error...")
+                send_message(f"{self.market_1} vs {self.market_2} - Order error...")
                 return "error" 
             
         # Return live
@@ -106,9 +110,13 @@ class BotAgent:
 
         # Print status - opening first order
         print("---")
+        send_message("---")
         print(f"{self.market_1}: Placing first order...")
+        send_message(f"{self.market_1}: Placing first order...")
         print(f"Side: {self.base_side}, Size: {self.base_size}, Price: {self.base_price}")
+        send_message(f"Side: {self.base_side}, Size: {self.base_size}, Price: {self.base_price}")
         print("---")
+        send_message("---")
 
         # Place Base Order
         try:
@@ -143,9 +151,13 @@ class BotAgent:
 
         # Print status - opening second order
         print("---")
+        send_message("---")
         print(f"{self.market_2}: Placing second order...")
+        send_message(f"{self.market_2}: Placing second order...")
         print(f"Side: {self.quote_side}, Size: {self.quote_size}, Price: {self.quote_price}")
+        send_message(f"Side: {self.quote_side}, Size: {self.quote_size}, Price: {self.quote_price}")
         print("---")
+        send_message("---")
 
         # Place Quote Order
         try:
@@ -195,7 +207,8 @@ class BotAgent:
                     print("Unexpected Error")
                     print(order_status_close_order)
 
-                    # !!! CONSIDER SENDING MESSAGE HERE !!!
+                    # Send Message
+                    send_message("Failed to execute. Code red. Error code: 100")
 
                     # Abort
                     exit(1)
@@ -207,8 +220,8 @@ class BotAgent:
                 print("Unexpected Error")
                 print(order_status_close_order)
 
-                # !!! CONSIDER SENDING MESSAGE HERE !!!
-
+                # Send Message
+                send_message("Failed to execute. Code red. Error code: 101")
                 # Abort
                 exit(1)
         

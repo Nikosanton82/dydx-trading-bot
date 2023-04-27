@@ -1,3 +1,4 @@
+from func_messaging import send_message
 import os
 import datetime
 # from pytz import timezone, utc
@@ -88,6 +89,7 @@ def place_market_order(client, market, side, size, price, reduce_only):
         )
     except Exception as e:
         print(f"Error in place_market_order creating order: {e}")
+        send_message(f"Error in place_market_order creating order: {e}")
         raise e
  
     # print("place_market_order: order placed")

@@ -3,6 +3,7 @@ from func_utils import format_number
 from func_public import get_candles_recent
 from func_cointegration import calculate_zscore
 from func_private import place_market_order
+from func_messaging import send_message
 import json
 import time
 
@@ -85,6 +86,7 @@ def manage_trade_exits(client):
         # Guard: If not all match exit with error
         if not check_m1 or not check_m2 or not check_live:
             print(f"Warning: Not all open positions match exchange records for {position_market_m1} and {position_market_m2}")
+            send_message(f"Warning: Not all open positions match exchange records for {position_market_m1} and {position_market_m2}")
             continue
 
         # Get prices
@@ -155,7 +157,9 @@ def manage_trade_exits(client):
 
                 # Close position for market 1
                 print(">>> Closing market 1 <<<")
+                send_message(">>> Closing market 1 <<<")
                 print(f"Closing position for {position_market_m1}")
+                send_message(f"Closing position for {position_market_m1}")
 
                 close_order_m1 = place_market_order(
                     client,
@@ -168,13 +172,16 @@ def manage_trade_exits(client):
 
                 print(close_order_m1["order"]["id"])
                 print(">>> Closing <<<")
+                send_message(">>> Closing <<<")
 
                 # Protect API
                 time.sleep(1)
 
                 # Close position for market 2
                 print(">>> Closing market 2 <<<")
+                send_message(">>> Closing market 2 <<<")
                 print(f"Closing position for {position_market_m2}")
+                send_message(f"Closing position for {position_market_m2}")
 
                 close_order_m2 = place_market_order(
                     client,
@@ -187,11 +194,13 @@ def manage_trade_exits(client):
 
                 print(close_order_m2["order"]["id"])
                 print(">>> Closing <<<")
+                send_message(">>> Closing <<<")
 
                 # Protect API
                 time.sleep(1)
             except Exception as e:
                 print(f"Exit failed for {position_market_m1} with {position_market_m2}")
+                send_message(f"Exit failed for {position_market_m1} with {position_market_m2}")
                 save_output.append(position)
 
         # Keep record of items and save
