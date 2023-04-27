@@ -4,6 +4,7 @@ from func_public import get_candles_recent
 from func_cointegration import calculate_zscore
 from func_private import is_open_positions
 from func_bot_agent import BotAgent
+from  func_messaging import send_message
 import pandas as pd
 import json
 
@@ -122,6 +123,7 @@ def open_positions(client):
                         account = client.private.get_account()
                         free_collateral = float(account.data["account"]["freeCollateral"])
                         print(f"Balance: {free_collateral} and minimum at {USD_MIN_COLLATERAL}")
+                        send_message(f"Balance: {free_collateral} and minimum at {USD_MIN_COLLATERAL}")
 
                         # Guard: Ensure collateral
                         if free_collateral < USD_MIN_COLLATERAL:
@@ -159,10 +161,12 @@ def open_positions(client):
 
                             # Confirm live status in print
                             print("Trade status: Live")
+                            send_message("Trade status: Live")
                             print("---")
 
     # Save agents
     print(f"Success: Manage open trades checked")
+    send_message(f"Success: Manage open trades checked")
     if len(bot_agents) > 0:
         with open("bot_agents.json", "w") as f:
             json.dump(bot_agents, f)
