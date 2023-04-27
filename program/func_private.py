@@ -13,6 +13,13 @@ from datetime import datetime, timedelta
 # current_time = datetime.datetime.now(time_zone)
 # print("Current time in your time zone:", current_time)
 
+
+# Check order status
+def check_order_status(client, order_id):
+    order = client.private.get_order_by_id(order_id)
+    return order.data['order']["status"]
+
+
 # Place Market order
 def place_market_order(client, market, side, size, price, reduce_only):
     # Get Position ID
