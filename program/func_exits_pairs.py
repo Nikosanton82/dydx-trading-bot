@@ -157,7 +157,6 @@ def manage_trade_exits(client):
 
                 # Close position for market 1
                 print(">>> Closing market 1 <<<")
-                send_message(">>> Closing market 1 <<<")
                 print(f"Closing position for {position_market_m1}")
                 send_message(f"Closing position for {position_market_m1}")
 
@@ -172,14 +171,12 @@ def manage_trade_exits(client):
 
                 print(close_order_m1["order"]["id"])
                 print(">>> Closing <<<")
-                send_message(">>> Closing <<<")
 
                 # Protect API
                 time.sleep(1)
 
                 # Close position for market 2
                 print(">>> Closing market 2 <<<")
-                send_message(">>> Closing market 2 <<<")
                 print(f"Closing position for {position_market_m2}")
                 send_message(f"Closing position for {position_market_m2}")
 
@@ -194,7 +191,6 @@ def manage_trade_exits(client):
 
                 print(close_order_m2["order"]["id"])
                 print(">>> Closing <<<")
-                send_message(">>> Closing <<<")
 
                 # Protect API
                 time.sleep(1)

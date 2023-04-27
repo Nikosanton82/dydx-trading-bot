@@ -161,7 +161,6 @@ def open_positions(client):
 
                             # Confirm live status in print
                             print("Trade status: Live")
-                            send_message("Trade status: Live")
                             print("---")
 
     # Save agents

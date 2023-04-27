@@ -11,7 +11,7 @@ from func_messaging import send_message
 if __name__ == "__main__":
 
     # Message on start
-    success = send_message("Bot launch successful!")
+    success = send_message("Bot launched successfully!")
 
     # Connect to client
     try:
@@ -43,7 +43,6 @@ if __name__ == "__main__":
         # Construct Market Prices
         try:
             print("Fetching market prices, please allow 3 minutes...")
-            send_message("Fetching market prices...")
             df_market_prices = construct_market_prices(client)
         except Exception as e:
             print("Error constructing market prices: ", e)
@@ -59,7 +58,6 @@ if __name__ == "__main__":
                 exit(1)
         except Exception as e:
             print("Error saving cointegrating pairs: ", e)
-            send_message(f"Error saving cointgrating pairs: {e}.")
             exit(1)
 
     # Run as always on

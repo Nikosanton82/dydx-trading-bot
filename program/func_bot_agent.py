@@ -110,13 +110,11 @@ class BotAgent:
 
         # Print status - opening first order
         print("---")
-        send_message("---")
         print(f"{self.market_1}: Placing first order...")
         send_message(f"{self.market_1}: Placing first order...")
         print(f"Side: {self.base_side}, Size: {self.base_size}, Price: {self.base_price}")
         send_message(f"Side: {self.base_side}, Size: {self.base_size}, Price: {self.base_price}")
         print("---")
-        send_message("---")
 
         # Place Base Order
         try:
@@ -151,13 +149,11 @@ class BotAgent:
 
         # Print status - opening second order
         print("---")
-        send_message("---")
         print(f"{self.market_2}: Placing second order...")
         send_message(f"{self.market_2}: Placing second order...")
         print(f"Side: {self.quote_side}, Size: {self.quote_size}, Price: {self.quote_price}")
         send_message(f"Side: {self.quote_side}, Size: {self.quote_size}, Price: {self.quote_price}")
         print("---")
-        send_message("---")
 
         # Place Quote Order
         try:
