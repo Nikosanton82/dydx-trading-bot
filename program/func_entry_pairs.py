@@ -29,6 +29,18 @@ def open_positions(client):
     # Initialize container for BotAgent results
     bot_agents = []
 
+    # Opening JSON file
+    try:
+        open_positions_file = open("bot_agents.json")
+        open_positions_dict = json.load(open_positions_file)
+        for p in open_positions_dict:
+            bot_agent.append(p)
+            
+        # pprint(bot_agent)
+
+    except:
+        bot_agents = []
+    
     # Find ZScorse triggers
     for index, row in df.iterrows():
 

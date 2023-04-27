@@ -128,7 +128,7 @@ def manage_trade_exits(client):
 
         # Close positions if triggered
         #### IN PRODUCTION REMOVE THE "not" ####. Otherwise it will close all positions regadless if the triggers are satisfied
-        if not is_close:
+        if is_close:
 
             # Determine side - m1
             side_m1 = "SELL"
