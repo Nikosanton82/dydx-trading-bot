@@ -1,16 +1,16 @@
 import os
 import datetime
-from pytz import timezone, utc
+# from pytz import timezone, utc
 import time
 from pprint import pprint
 from func_utils import format_number
-# from datetime import datetime, timedelta
+from datetime import datetime, timedelta
 
 # Replace 'YOUR_TIME_ZONE' with your actual time zone. For example, 'America/New_York' or 'Europe/London'
-os.environ['TZ'] = 'Europe/Vienna'
-time_zone = timezone(os.environ['TZ'])
+# os.environ['TZ'] = 'Europe/Vienna'
+# time_zone = timezone(os.environ['TZ'])
 
-current_time = datetime.datetime.now(time_zone)
+# current_time = datetime.datetime.now(time_zone)
 # print("Current time in your time zone:", current_time)
 
 # Place Market order
@@ -21,9 +21,10 @@ def place_market_order(client, market, side, size, price, reduce_only):
 
     # Get expiration time
     server_time = client.public.get_time()
-    server_time_utc = datetime.datetime.fromisoformat(server_time.data["iso"].rstrip("Z")).replace(tzinfo=utc)
-    server_time_local = server_time_utc.astimezone(time_zone)
-    expiration = server_time_local + datetime.timedelta(minutes=2, seconds=10)  # Changed to 2 minutes and 10 seconds
+    # server_time_utc = datetime.datetime.fromisoformat(server_time.data["iso"].rstrip("Z")).replace(tzinfo=utc)
+    # server_time_local = server_time_utc.astimezone(time_zone)
+    # expiration = server_time_local + datetime.timedelta(minutes=2, seconds=10)  # Changed to 2 minutes and 10 seconds
+    expiration = datetime.fromisoformat(server_time.data["iso"].replace("Z", "")) + timedelta(seconds=70)
 
     # print("Server Time (UTC):", server_time_utc.isoformat())  # Debug print
     # print("Server Time (Local):", server_time_local.isoformat())  # Debug print
