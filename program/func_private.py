@@ -21,7 +21,7 @@ def is_open_positions(client, market):
     time.sleep(0.2)
 
     # Get positions
-    all_positions = client.private.get_position(
+    all_positions = client.private.get_positions(
         market=market,
         status="OPEN"
     )
