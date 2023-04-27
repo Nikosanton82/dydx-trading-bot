@@ -1,4 +1,4 @@
-from constants import ZSCORE_THRESH, USD_PER_TRADE, USD_MIN_COLLATERAL
+from constants import ZSCORE_THRESH, USD_PER_TRADE, USD_MIN_COLLATERAL, TOKEN_FACTOR_10
 from func_utils import format_number
 from func_public import get_candles_recent
 from func_cointegration import calculate_zscore
@@ -83,6 +83,13 @@ def open_positions(client):
                     # Get size
                     base_quantity = 1 / base_price * USD_PER_TRADE
                     quote_quantity = 1 / quote_price * USD_PER_TRADE
+                    ### -ADD HERE- ###
+                    for special in TOKEN_FACTOR_10 :
+                        if base_market== special :
+                            base_quantity= float(int(base_quantity/10)*10) 
+                        if quote_market== special :
+                            quote_quantity= float(int(quote_quantity/10)*10) 
+                    ####-THE REST REMAIN AS THE ORIGINAL VERSION -###
                     base_step_size = markets["markets"][base_market]["stepSize"]
                     quote_step_size = markets["markets"][quote_market]["stepSize"]
 
@@ -109,6 +116,41 @@ def open_positions(client):
                             break
 
                         # Create Bot Agent
-                        print(base_market, base_side, base_size, accept_base_price)
-                        print(quote_market, quote_side, quote_size, accept_quote_price)
-                        exit(1)
+                        # print(base_market, base_side, base_size, accept_base_price)
+                        # print(quote_market, quote_side, quote_size, accept_quote_price)
+                        # exit(1)
+                        bot_agent = BotAgent(
+                            client,
+                            market_1=base_market,
+                            market_2=quote_market,
+                            base_side=base_side,
+                            base_size=base_size,
+                            base_price=accept_base_price,
+                            quote_side=quote_side,
+                            quote_size=quote_size,
+                            quote_price=accept_quote_price,
+                            accept_failsafe_base_price=accept_failsafe_base_price,
+                            z_score=z_score,
+                            half_life=half_life,
+                            hedge_ratio=hedge_ratio,
+                        )
+
+                        # Call function for Open Trades
+                        bot_open_dict = bot_agent.open_trades()
+
+                        # Handle success in opening trades
+                        if bot_open_dict["pair_status"] == "LIVE":
+
+                            # Append to list of Bot Agents
+                            bot_agents.append(bot_open_dict)
+                            del(bot_open_dict)
+
+                            # Confirm live status in print
+                            print("Trade status: Live")
+                            print("---")
+
+    # Save agents
+    print(f"Success: {len(bot_agents)} New Pairs LIVE")
+    if len(bot_agents) > 0:
+        with open("bot_agents.json", "w") as f:
+            json.dump(bot_agents, f)

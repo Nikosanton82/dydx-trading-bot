@@ -35,40 +35,59 @@ def is_open_positions(client, market):
 # Check order status
 def check_order_status(client, order_id):
     order = client.private.get_order_by_id(order_id)
-    return order.data['order']["status"]
+    if order.data:
+        if "order" in order.data.keys():
+            return order.data['order']["status"]
+    return "FAILED"
 
 
 # Place Market order
 def place_market_order(client, market, side, size, price, reduce_only):
+    print("place_market_order: start")
+
     # Get Position ID
     account_response = client.private.get_account()
     position_id = account_response.data["account"]["positionId"]
+    print(f"place_market_order: position_id obtained: {position_id}")
 
     # Get expiration time
     server_time = client.public.get_time()
+    server_time_dt = datetime.fromisoformat(server_time.data["iso"].replace("Z", ""))
+    local_time_dt = datetime.now()
+    time_difference = local_time_dt - server_time_dt
+    # Calculate adjusted expiration time
+    adjusted_local_time = datetime.now() - time_difference
+    expiration = adjusted_local_time + timedelta(seconds=70)
+    print(f"place_market_order: expiration calculated: {expiration}")
     # server_time_utc = datetime.datetime.fromisoformat(server_time.data["iso"].rstrip("Z")).replace(tzinfo=utc)
     # server_time_local = server_time_utc.astimezone(time_zone)
     # expiration = server_time_local + datetime.timedelta(minutes=2, seconds=10)  # Changed to 2 minutes and 10 seconds
-    expiration = datetime.fromisoformat(server_time.data["iso"].replace("Z", "")) + timedelta(seconds=70)
+    # expiration = datetime.fromisoformat(server_time.data["iso"].replace("Z", "")) + timedelta(seconds=70)
 
     # print("Server Time (UTC):", server_time_utc.isoformat())  # Debug print
     # print("Server Time (Local):", server_time_local.isoformat())  # Debug print
     # print("Expiration Time:", expiration.isoformat())  # Debug print
 
-    # Place an order 
-    placed_order = client.private.create_order(
-        position_id=position_id, # required for creating the order signature
-        market=market,
-        side=side,
-        order_type="MARKET",
-        post_only=False,
-        size=size,
-        price=price,
-        limit_fee='0.015',
-        expiration_epoch_seconds=expiration.timestamp(),
-        time_in_force="FOK",
-        reduce_only=reduce_only
-    )
+    try:
+        # Place an order 
+        placed_order = client.private.create_order(
+            position_id=position_id, # required for creating the order signature
+            market=market,
+            side=side,
+            order_type="MARKET",
+            post_only=False,
+            size=size,
+            price=price,
+            limit_fee='0.015',
+            expiration=expiration.isoformat() + "Z",  # Add "Z" to make it a valid ISO string
+            time_in_force="FOK",
+            reduce_only=reduce_only
+        )
+    except Exception as e:
+        print(f"Error in place_market_order creating order: {e}")
+        raise e
+ 
+    print("place_market_order: order placed")
 
     # Return results
     return placed_order.data

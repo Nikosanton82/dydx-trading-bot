@@ -16,6 +16,26 @@ if __name__ == "__main__":
         print("Error connections to client: ", e)
         exit(1)
 
+    # # Add the code here to print local time, server time, and time difference
+    # from datetime import datetime
+    # import pytz
+    # import os
+
+    # # Set the 'TZ' environment variable
+    # os.environ['TZ'] = 'Europe/Vienna'
+    # # Get local time
+    # local_time = datetime.now(pytz.timezone(os.environ['TZ']))
+    # print("Local time:", local_time)
+
+    # # Get server time
+    # server_time_response = client.public.get_time()
+    # server_time_str = server_time_response.data["iso"].rstrip("Z")
+    # server_time = datetime.fromisoformat(server_time_str).replace(tzinfo=pytz.UTC)
+    # print("Server time:", server_time)
+
+    # # Calculate the difference
+    # time_difference = local_time - server_time
+    # print("Time difference:", time_difference)
 
     # Abort all open positions
     if ABORT_ALL_POSITIONS:
