@@ -43,12 +43,12 @@ def check_order_status(client, order_id):
 
 # Place Market order
 def place_market_order(client, market, side, size, price, reduce_only):
-    print("place_market_order: start")
+    # print("place_market_order: start")
 
     # Get Position ID
     account_response = client.private.get_account()
     position_id = account_response.data["account"]["positionId"]
-    print(f"place_market_order: position_id obtained: {position_id}")
+    # print(f"place_market_order: position_id obtained: {position_id}")
 
     # Get expiration time
     server_time = client.public.get_time()
@@ -58,10 +58,13 @@ def place_market_order(client, market, side, size, price, reduce_only):
     # Calculate adjusted expiration time
     adjusted_local_time = datetime.now() - time_difference
     expiration = adjusted_local_time + timedelta(seconds=70)
-    print(f"place_market_order: expiration calculated: {expiration}")
+    # print(f"place_market_order: expiration calculated: {expiration}")
+    
+    
     # server_time_utc = datetime.datetime.fromisoformat(server_time.data["iso"].rstrip("Z")).replace(tzinfo=utc)
     # server_time_local = server_time_utc.astimezone(time_zone)
     # expiration = server_time_local + datetime.timedelta(minutes=2, seconds=10)  # Changed to 2 minutes and 10 seconds
+    
     # expiration = datetime.fromisoformat(server_time.data["iso"].replace("Z", "")) + timedelta(seconds=70)
 
     # print("Server Time (UTC):", server_time_utc.isoformat())  # Debug print
