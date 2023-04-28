@@ -123,7 +123,7 @@ def open_positions(client):
                         account = client.private.get_account()
                         free_collateral = float(account.data["account"]["freeCollateral"])
                         print(f"Balance: {free_collateral} and minimum at {USD_MIN_COLLATERAL}")
-                        send_message(f"Balance: {free_collateral} and minimum at {USD_MIN_COLLATERAL}")
+                        # send_message(f"Balance: {free_collateral} and minimum at {USD_MIN_COLLATERAL}")
 
                         # Guard: Ensure collateral
                         if free_collateral < USD_MIN_COLLATERAL:

@@ -11,7 +11,7 @@ from func_messaging import send_message
 if __name__ == "__main__":
 
     # Message on start
-    success = send_message("Bot launched successfully!")
+    # success = send_message("Bot launched successfully!")
 
     # Connect to client
     try:
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     if ABORT_ALL_POSITIONS:
         try:
             print("Closing all positions...")
-            send_message("Closing all positions...")
+            # send_message("Closing all positions...")
             close_orders= abort_all_positions(client)
         except Exception as e:
             print("Error closing all postions: ", e)
